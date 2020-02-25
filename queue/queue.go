@@ -43,10 +43,10 @@ func (q *Queue) Enqueue(value string) error {
 	if q.length == q.size {
 		return ErrQueueFull
 	}
-	newNode := NewQueue(value)
+	newNode := newNode(value)
 	if q.front == q.rear && q.front == nil {
 		q.front = newNode
-		r.rear = newNode
+		q.rear = newNode
 	}
 	q.rear.next = newNode
 	q.rear = newNode
@@ -84,8 +84,39 @@ func (q *Queue) MoveNodeToEnd(value string) error {
 	if temp == nil {
 		return ErrNodeNotFound
 	}
+	// store the value of the data to be moved
+	toMoveNodeData := temp.data
+
 	if tempPrev == temp {
-
+		// deleting very first node of the queue
+		q.front = q.front.next
+	} else {
+		// deleting some other node
+		tempPrev.next = temp.next
 	}
+	// update the length after deletion
+	q.length--
 
+	// enqueue a new node with data toMoveNodeData
+	q.Enqueue(toMoveNodeData)
+	return nil
+
+}
+
+func (q *Queue) PeekFront() string {
+	if q.length == 0 {
+		fmt.Println(ErrQueueEmpty)
+		return ""
+	}
+	fmt.Println(q.front.data)
+	return q.front.data
+}
+
+func (q *Queue) PeekRear() string {
+	if q.length == 0 {
+		fmt.Println(ErrQueueEmpty)
+		return ""
+	}
+	fmt.Println(q.rear.data)
+	return q.rear.data
 }
